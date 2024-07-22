@@ -14,7 +14,6 @@ class CameraDetectionPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
     return Transform.scale(
       scale: 1.0,
       child: AspectRatio(

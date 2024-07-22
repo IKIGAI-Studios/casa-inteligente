@@ -1,89 +1,68 @@
+import 'dart:async';
 import 'dart:io';
 
+import 'package:casa_inteligente/pages/bluetooth_off.dart';
+import 'package:casa_inteligente/pages/scan.dart';
 import 'package:casa_inteligente/pages/widgets/app_button.dart';
+import 'package:casa_inteligente/pages/widgets/nav_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'home.dart';
 
 class Profile extends StatelessWidget {
-  const Profile(this.username, {Key? key, required this.imagePath})
-      : super(key: key);
+  const Profile(this.username, {Key? key, required this.imagePath}) : super(key: key);
   final String username;
   final String imagePath;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          child: Column(
+      drawer: NavDrawer(),
+      appBar: AppBar(
+        title: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Column(
             children: [
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.black,
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: FileImage(File(imagePath)),
-                      ),
-                    ),
-                    margin: EdgeInsets.all(20),
-                    width: 50,
-                    height: 50,
-                  ),
-                  Text(
-                    'Hola ' + username + '!',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                  ),
-                ],
+              Text(
+                username,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
-              Container(
-                margin: EdgeInsets.all(20),
-                padding: EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Color(0xFFFEFFC1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.warning_amber_outlined,
-                      size: 30,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      '''¡Bienvenido!''',
-                      style: TextStyle(fontSize: 16),
-                      textAlign: TextAlign.left,
-                    ),                    
-                  ],
-                ),
+              Text(
+                'Otra info',
+                style: Theme.of(context).textTheme.bodySmall,
               ),
-              Spacer(),
-              AppButton(
-                text: "Salir",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MyHomePage()),
-                  );
-                },
-                icon: Icon(
-                  Icons.logout,
-                  color: Colors.white,
-                ),
-                color: Color(0xFFFF6161),
-              ),
-              SizedBox(
-                height: 20,
-              )
             ],
           ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.black,
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: FileImage(File(imagePath)),
+              ),
+            ),
+            margin: EdgeInsets.all(20),
+            width: 50,
+            height: 50,
+          ),
+        ],
+      ),
+        
+      ),
+      body: SafeArea(
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+          child: ScanScreen(),
         ),
       ),
     );
   }
 }
+
+
+
+
+
+
