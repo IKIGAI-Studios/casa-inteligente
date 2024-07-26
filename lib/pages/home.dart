@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
             child: PopupMenuButton<String>(
               child: Icon(
                 Icons.more_vert,
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               onSelected: (value) {
                 switch (value) {
@@ -71,26 +71,29 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
       body: !loading
-          ? SingleChildScrollView(
-              child: SafeArea(
-                child: Center(
-                  child: Row(
+          ? SafeArea(
+            child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Column(
                         children: [
                           SvgPicture.asset(
                             'assets/img/logo.svg',
-                            height: 200,
-                            width: 200,
+                            height: 250,
+                            width: 250,
                           ),
-                          Text('Casa Inteligente')
+                          Text('Casa Inteligente', style: Theme.of(context).textTheme.displayMedium,)
                         ],
                       ),
                       Column(
                         children: [
-
-
+                  
+                  
                           
                           InkWell(
                             onTap: () {
@@ -112,7 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                               alignment: Alignment.center,
                               padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-                              width: 250,
+                              width: 300,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -152,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               alignment: Alignment.center,
                               padding: EdgeInsets.symmetric(
                                   vertical: 14, horizontal: 16),
-                              width: 250,
+                              width: 300,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -172,9 +175,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       )
                     ],
                   ),
-                ),
+                  SizedBox(height: 50)
+                ],
               ),
-            )
+            ),
+          )
           : Center(
               child: CircularProgressIndicator(),
             ),
