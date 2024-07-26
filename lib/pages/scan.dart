@@ -109,18 +109,14 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
-  void onTestConnectPressed(context) {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (BuildContext context) => ActionsScreenTest()
-    //   )
-    // );
+  void onTestConnectPressed() {
+    print('Current context: $context');
 
-    MaterialPageRoute route = MaterialPageRoute(
-      builder: (BuildContext context) => ActionsScreenTest(username: widget.username, imagePath: widget.imagePath,)
+    Navigator.push(context,
+      MaterialPageRoute(
+        builder: (context) => ActionsScreenTest(username: widget.username, imagePath: widget.imagePath,)
+      )
     );
-    Navigator.push(context, route);
   }
 
   void onConnectPressed(BluetoothDevice device) {
@@ -165,9 +161,9 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
-    Widget buildTestButton(BuildContext context) {
+    Widget buildTestButton() {
     return TextButton(
-      onPressed: () => onTestConnectPressed(context),
+      onPressed: () => onTestConnectPressed(),
       child: const Text("TEST"),
     );
   }
@@ -211,7 +207,8 @@ class _ScanScreenState extends State<ScanScreen> {
               Text('Buscar dispositivos', style: Theme.of(context).textTheme.bodyMedium),
               SizedBox(width: 10),
               buildScanButton(context),
-              buildTestButton(context),
+              buildTestButton(),
+              TextButton(onPressed: (() => Navigator.pop(context)), child: Text('IDK'))
             ],
           ),
           SizedBox(height: 20),

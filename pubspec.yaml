@@ -59,6 +59,7 @@ flutter:
     - assets/mobilefacenet.tflite
     - assets/img/logo.svg
     - assets/img/sala.svg
+    - assets/img/habitacion.svg
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

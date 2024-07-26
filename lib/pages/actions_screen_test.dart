@@ -24,9 +24,18 @@ class ActionsScreenTestState extends State<ActionsScreenTest> {
   double _temperature = 0.0;
   bool _isDiscoveringServices = false;
 
+  String _title = 'Sala principal';
+  String _assetName = 'assets/img/sala.svg';
+
+  Widget getSvg() {
+    return SvgPicture.asset(_assetName, height: 150, width: 150);
+  }
+
   @override
   void initState() {
     super.initState();
+
+    print('Current context: $context');
   }
 
   Future<void> getTemperature() async {
@@ -50,10 +59,77 @@ class ActionsScreenTestState extends State<ActionsScreenTest> {
     print('Door: '+ action.toString());
   }
 
+  void changeMainScreen(String route) {
+    if (route == 'sala') {
+      setState(() {
+        _title = 'Sala principal';
+        _assetName = 'assets/img/sala.svg';
+      });
+    } else if (route == 'habitacion1') {
+      setState(() {
+        _title = 'Habitación 1';
+        _assetName = 'assets/img/habitacion.svg';
+      });
+    } else if (route == 'habitacion2') {
+      setState(() {
+        _title = 'Habitación 2';
+        _assetName = 'assets/img/habitacion.svg';
+      });
+    }
+  }
+
+
+  Widget buildDrawer() {
+    return Drawer(
+      child: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.bluetooth),
+            title: Text('Dispositivos'),
+            onTap: () {
+              print('Regresando a dispositivos BT...');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.chair),
+            title: Text('Sala principal'),
+            onTap: () => {
+              changeMainScreen('sala'),
+              Navigator.pop(context),
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.bed),
+            title: Text('Habitación 1'),
+            onTap: () => {
+              changeMainScreen('habitacion1'),
+              Navigator.pop(context),
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.bed),
+            title: Text('Habitación 2'),
+            onTap: () => {
+              changeMainScreen('habitacion2'),
+              Navigator.pop(context),
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.exit_to_app),
+            title: Text('Logout'),
+            onTap: () {Navigator.pop(context);},
+          ),
+        ],
+      ),
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavDrawer(),
+      drawer: buildDrawer(),
       appBar: AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -89,7 +165,7 @@ class ActionsScreenTestState extends State<ActionsScreenTest> {
       body: SafeArea(
         child: Column(
           children: [
-            Text('Sala principal', style: Theme.of(context).textTheme.bodyMedium),
+            Text(_title, style: Theme.of(context).textTheme.bodyMedium),
             SizedBox(height: 20),
             _isDiscoveringServices
             ? const Center(child: CircularProgressIndicator())
@@ -100,11 +176,7 @@ class ActionsScreenTestState extends State<ActionsScreenTest> {
                 children: <Widget>[
                   Column(
                     children: [
-                      SvgPicture.asset(
-                        'assets/img/sala.svg',
-                        height: 150,
-                        width: 150,
-                      ),
+                      getSvg(),
                       const SizedBox(height: 20),
                       Text('Temperatura: $_temperature °C',
                           style: Theme.of(context).textTheme.bodySmall),
