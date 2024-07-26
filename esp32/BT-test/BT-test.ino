@@ -3,14 +3,12 @@
 #include <BLEUtils.h>
 #include <BLE2902.h>
 #include <ESP32Servo.h>
-#include <DHT.h>
+#include <DHT11.h>
 
-#define DHTPIN 4     // Pin GPIO al que está conectado el DHT11
-#define DHTTYPE DHT11
+DHT11 dht11(4); // Pin del DHT11 conectado al 4
 
-DHT dht(DHTPIN, DHTTYPE);
-BLEServer* pServer = NULL;
-BLECharacteristic* pCharacteristic = NULL;
+BLEServer *pServer = NULL;
+BLECharacteristic *pCharacteristic = NULL;
 bool deviceConnected = false;
 bool oldDeviceConnected = false;
 
@@ -23,33 +21,44 @@ int LED_PIN = 22;
 Servo miServo;
 const int SERVO_PIN = 18;
 
-class MyServerCallbacks: public BLEServerCallbacks {
-  void onConnect(BLEServer* pServer) {
+class MyServerCallbacks : public BLEServerCallbacks
+{
+  void onConnect(BLEServer *pServer)
+  {
     deviceConnected = true;
     BLEDevice::startAdvertising();
   };
 
-  void onDisconnect(BLEServer* pServer) {
+  void onDisconnect(BLEServer *pServer)
+  {
     deviceConnected = false;
     digitalWrite(LED_PIN, HIGH);
   }
 };
 
-class MyLEDCallbacks: public BLECharacteristicCallbacks {
-  void onWrite(BLECharacteristic *pCharacteristic){
+class MyLEDCallbacks : public BLECharacteristicCallbacks
+{
+  void onWrite(BLECharacteristic *pCharacteristic)
+  {
     String value = pCharacteristic->getValue().c_str();
 
-    if(value.length() > 0){
+    if (value.length() > 0)
+    {
       Serial.print("Received value for LED: ");
       Serial.println(value);
 
-      if (value == "on") {
-        digitalWrite(LED_PIN, LOW);  // Enciende el LED
+      if (value == "on")
+      {
+        digitalWrite(LED_PIN, LOW); // Enciende el LED
         Serial.println("LED Encendido");
-      } else if (value == "off") {
-        digitalWrite(LED_PIN, HIGH);   // Apaga el LED
+      }
+      else if (value == "off")
+      {
+        digitalWrite(LED_PIN, HIGH); // Apaga el LED
         Serial.println("LED Apagado");
-      } else {
+      }
+      else
+      {
         Serial.println("Received invalid value for LED");
       }
       Serial.println("**********");
@@ -57,21 +66,29 @@ class MyLEDCallbacks: public BLECharacteristicCallbacks {
   }
 };
 
-class MyDoorCallbacks: public BLECharacteristicCallbacks {
-  void onWrite(BLECharacteristic *pCharacteristic){
+class MyDoorCallbacks : public BLECharacteristicCallbacks
+{
+  void onWrite(BLECharacteristic *pCharacteristic)
+  {
     String value = pCharacteristic->getValue().c_str();
 
-    if(value.length() > 0){
+    if (value.length() > 0)
+    {
       Serial.print("Received value for Door: ");
       Serial.println(value);
 
-      if (value == "open") {
-        miServo.write(90);  // Mueve el servo a 90 grados (abrir)
+      if (value == "open")
+      {
+        miServo.write(90); // Mueve el servo a 90 grados (abrir)
         Serial.println("Puerta Abierta");
-      } else if (value == "close") {
-        miServo.write(0);   // Mueve el servo a 0 grados (cerrar)
+      }
+      else if (value == "close")
+      {
+        miServo.write(0); // Mueve el servo a 0 grados (cerrar)
         Serial.println("Puerta Cerrada");
-      } else {
+      }
+      else
+      {
         Serial.println("Received invalid value for Door");
       }
       Serial.println("**********");
@@ -79,14 +96,14 @@ class MyDoorCallbacks: public BLECharacteristicCallbacks {
   }
 };
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
 
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, HIGH);
 
   miServo.attach(SERVO_PIN);
-  dht.begin();
 
   // Create the BLE Device
   BLEDevice::init("ESP32 Controller");
@@ -100,34 +117,31 @@ void setup() {
 
   // Create a BLE Characteristic for LED
   BLECharacteristic *ledCharacteristic = pService->createCharacteristic(
-                      LED_CHARACTERISTIC_UUID,
-                      BLECharacteristic::PROPERTY_READ |
-                      BLECharacteristic::PROPERTY_WRITE |
-                      BLECharacteristic::PROPERTY_NOTIFY |
-                      BLECharacteristic::PROPERTY_INDICATE
-                    );
+      LED_CHARACTERISTIC_UUID,
+      BLECharacteristic::PROPERTY_READ |
+          BLECharacteristic::PROPERTY_WRITE |
+          BLECharacteristic::PROPERTY_NOTIFY |
+          BLECharacteristic::PROPERTY_INDICATE);
   ledCharacteristic->setCallbacks(new MyLEDCallbacks());
   ledCharacteristic->setValue("Control LED");
   ledCharacteristic->addDescriptor(new BLE2902());
 
   // Create a BLE Characteristic for Door
   BLECharacteristic *doorCharacteristic = pService->createCharacteristic(
-                      DOOR_CHARACTERISTIC_UUID,
-                      BLECharacteristic::PROPERTY_READ |
-                      BLECharacteristic::PROPERTY_WRITE |
-                      BLECharacteristic::PROPERTY_NOTIFY |
-                      BLECharacteristic::PROPERTY_INDICATE
-                    );
+      DOOR_CHARACTERISTIC_UUID,
+      BLECharacteristic::PROPERTY_READ |
+          BLECharacteristic::PROPERTY_WRITE |
+          BLECharacteristic::PROPERTY_NOTIFY |
+          BLECharacteristic::PROPERTY_INDICATE);
   doorCharacteristic->setCallbacks(new MyDoorCallbacks());
   doorCharacteristic->setValue("Control Door");
   doorCharacteristic->addDescriptor(new BLE2902());
 
   // Create a BLE Characteristic for Temperature
   BLECharacteristic *temperatureCharacteristic = pService->createCharacteristic(
-                      TEMPERATURE_CHARACTERISTIC_UUID,
-                      BLECharacteristic::PROPERTY_READ |
-                      BLECharacteristic::PROPERTY_NOTIFY
-                    );
+      TEMPERATURE_CHARACTERISTIC_UUID,
+      BLECharacteristic::PROPERTY_READ |
+          BLECharacteristic::PROPERTY_NOTIFY);
   temperatureCharacteristic->addDescriptor(new BLE2902());
 
   // Start the service
@@ -137,34 +151,47 @@ void setup() {
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pAdvertising->setScanResponse(false);
-  pAdvertising->setMinPreferred(0x0);  // set value to 0x00 to not advertise this parameter
+  pAdvertising->setMinPreferred(0x0); // set value to 0x00 to not advertise this parameter
   BLEDevice::startAdvertising();
   Serial.println("Waiting a client connection to notify...");
 }
 
-void loop() {
-  if (!deviceConnected && oldDeviceConnected) {
-    delay(500); // give the bluetooth stack the chance to get things ready
+void loop()
+{
+  if (!deviceConnected && oldDeviceConnected)
+  {
+    delay(500);                  // give the bluetooth stack the chance to get things ready
     pServer->startAdvertising(); // restart advertising
     Serial.println("start advertising");
     oldDeviceConnected = deviceConnected;
   }
   // connecting
-  if (deviceConnected && !oldDeviceConnected) {
+  if (deviceConnected && !oldDeviceConnected)
+  {
     oldDeviceConnected = deviceConnected;
   }
 
-  if (deviceConnected) {
-    float temperature = dht.readTemperature();
-    if (isnan(temperature)) {
-      Serial.println("Failed to read from DHT sensor!");
-      return;
+  if (deviceConnected)
+  {
+    float temperature = dht11.readTemperature();
+    if (temperature != DHT11::ERROR_CHECKSUM && temperature != DHT11::ERROR_TIMEOUT)
+    {
+      if (isnan(temperature))
+      {
+        Serial.println("Failed to read from DHT sensor!");
+        return;
+      }
+      String tempString = String(temperature);
+      pCharacteristic->setValue(tempString.c_str());
+      pCharacteristic->notify();
+      Serial.print("Temperature: ");
+      Serial.println(tempString);
     }
-    String tempString = String(temperature);
-    pCharacteristic->setValue(tempString.c_str());
-    pCharacteristic->notify();
-    Serial.print("Temperature: ");
-    Serial.println(tempString);
+    else
+    {
+      // Print error message based on the error code.
+      Serial.println(DHT11::getErrorString(temperature));
+    }
     delay(2000); // Update every 2 seconds
   }
 }
