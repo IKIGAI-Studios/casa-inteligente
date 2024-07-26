@@ -5,40 +5,19 @@ import 'dart:io';
 import 'package:casa_inteligente/pages/widgets/nav_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class ActionsScreen extends StatefulWidget {
-  final test = false;
+class ActionsScreenTest extends StatefulWidget {
+  const ActionsScreenTest({Key? key, required this.username, required this.imagePath}) : super(key: key);
 
-  final BluetoothDevice device;
   final String username;
   final String imagePath;
 
-  const ActionsScreen({Key? key, required this.device, required this.username, required this.imagePath}) : super(key: key);
-
-  //ActionsScreen({Key? key}) : super(key: key);
-
   @override
-  ActionsScreenState createState() => ActionsScreenState();
+  ActionsScreenTestState createState() => ActionsScreenTestState();
 }
 
-class ActionsScreenState extends State<ActionsScreen> {
-  List<BluetoothService> _services = [];
-  BluetoothCharacteristic? _ledCharacteristic,
-      _doorCharacteristic,
-      _temperatureCharacteristic;
-
-  BluetoothConnectionState _connectionState =
-      BluetoothConnectionState.disconnected;
-
-  late StreamSubscription<BluetoothConnectionState>
-      _connectionStateSubscription;
-
-  // Información del ESP32
-  final serviceUUID = '4fafc201-1fb5-459e-8fcc-c5c9c331914b';
-  final ledCharacteristicUUID = 'beb5483e-36e1-4688-b7f5-ea07361b26a8';
-  final doorCharacteristicUUID = 'a1b2c3d4-5678-90ab-cdef-1234567890ab';
-  final temperatureCharacteristicUUID = 'abcdef12-3456-7890-abcd-ef1234567890';
+class ActionsScreenTestState extends State<ActionsScreenTest> {
 
   bool _ledState = false;
   bool _doorState = false;
@@ -48,88 +27,27 @@ class ActionsScreenState extends State<ActionsScreen> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _isDiscoveringServices = true;
-    });
-
-    _connectionStateSubscription =
-        widget.device.connectionState.listen((state) async {
-      _connectionState = state;
-      if (state == BluetoothConnectionState.connected) {
-        try {
-          _services = await widget.device.discoverServices();
-
-          // Buscar el servicio de led
-          _ledCharacteristic = _services
-              .expand((service) => service.characteristics)
-              .firstWhere((characteristic) =>
-                  characteristic.uuid.toString() == ledCharacteristicUUID);
-
-          // Buscar el servicio de puerta
-          _doorCharacteristic = _services
-              .expand((service) => service.characteristics)
-              .firstWhere((characteristic) =>
-                  characteristic.uuid.toString() == doorCharacteristicUUID);
-
-          // Buscar el servicio de temperatura
-          _temperatureCharacteristic = _services
-              .expand((service) => service.characteristics)
-              .firstWhere((characteristic) =>
-                  characteristic.uuid.toString() == temperatureCharacteristicUUID);
-
-          // Obtener la temperatura
-          await getTemperature();
-        } catch (e) {
-          print("Error discovering services: $e");
-        } finally {
-          setState(() {
-            _isDiscoveringServices = false;
-          });
-        }
-      }
-    });
   }
 
   Future<void> getTemperature() async {
-    if (_temperatureCharacteristic != null) {
-      try {
-        // Habilitar notificaciones
-        await _temperatureCharacteristic!.setNotifyValue(true);
-
-        // Suscribirse al stream de valores de la característica
-        _temperatureCharacteristic!.lastValueStream.listen((value) {
-          String tempString = utf8.decode(value);
-          double temp = double.parse(tempString);
-          setState(() {
-            _temperature = temp;
-          });
-        });
-      } catch (e) {
-        print("Error setting up temperature notifications: $e");
-      }
-    }
+    setState(() {
+      _temperature = 25.0;
+    });
+    print('temperature');
   }
 
   void sendLedCommand(bool turnOn) {
-    if (_ledCharacteristic != null) {
-      String command = turnOn ? "on" : "off";
-      List<int> bytes = utf8.encode(command);
-      _ledCharacteristic!.write(bytes);
-      setState(() {
-        _ledState = turnOn;
-      });
-    }
+    setState(() {
+      _ledState = turnOn;
+    });
+    print('LED: '+ turnOn.toString());
   }
 
   void sendDoorCommand(bool action) {
-    if (_doorCharacteristic != null) {
-      String command = action ? "open" : "close";
-      List<int> bytes = utf8.encode(command);
-      _ledCharacteristic!.write(bytes);
-      setState(() {
-        _doorState = action;
-      });
-    }
+    setState(() {
+      _doorState = action;
+    });
+    print('Door: '+ action.toString());
   }
 
   @override
@@ -231,20 +149,14 @@ class ActionsScreenState extends State<ActionsScreen> {
   void onLedChangedHandler(bool value) {
     setState(() {
       _ledState = value;
-
-      if (_ledCharacteristic != null) {
-        sendLedCommand(value);
-      }
+      sendLedCommand(value);
     });
   }
 
   void onDoorChangedHandler(bool value) {
     setState(() {
       _doorState = value;
-
-      if (_ledCharacteristic != null) {
-        sendDoorCommand(value);
-      }
+      sendDoorCommand(value);
     });
   }
 }

@@ -17,7 +17,6 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavDrawer(),
       appBar: AppBar(
         title: Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -54,7 +53,7 @@ class Profile extends StatelessWidget {
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-          child: ScanScreen(),
+          child: ScanScreen(username: username, imagePath: imagePath),
         ),
       ),
     );

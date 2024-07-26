@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:casa_inteligente/pages/actions_screen.dart';
+import 'package:casa_inteligente/pages/actions_screen_test.dart';
 import 'package:casa_inteligente/pages/widgets/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -12,7 +13,10 @@ import 'package:casa_inteligente/pages/widgets/system_device_tile.dart';
 
 
 class ScanScreen extends StatefulWidget {
-  const ScanScreen({Key? key}) : super(key: key);
+  const ScanScreen({Key? key, required this.username, required this.imagePath}) : super(key: key);
+
+  final String username;
+  final String imagePath;
 
   @override
   State<ScanScreen> createState() => _ScanScreenState();
@@ -105,6 +109,20 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
+  void onTestConnectPressed(context) {
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (BuildContext context) => ActionsScreenTest()
+    //   )
+    // );
+
+    MaterialPageRoute route = MaterialPageRoute(
+      builder: (BuildContext context) => ActionsScreenTest(username: widget.username, imagePath: widget.imagePath,)
+    );
+    Navigator.push(context, route);
+  }
+
   void onConnectPressed(BluetoothDevice device) {
     device.connectAndUpdateStream().catchError((e) {
       showDialog(
@@ -117,7 +135,7 @@ class _ScanScreenState extends State<ScanScreen> {
       );
     });
     MaterialPageRoute route = MaterialPageRoute(
-        builder: (context) => ActionsScreen(device: device), settings: const RouteSettings(name: '/ActionsScreen'));
+        builder: (context) => ActionsScreen(device: device, username: widget.username, imagePath: widget.imagePath,), settings: const RouteSettings(name: '/ActionsScreen'));
     Navigator.of(context).push(route);
   }
 
@@ -147,6 +165,13 @@ class _ScanScreenState extends State<ScanScreen> {
     }
   }
 
+    Widget buildTestButton(BuildContext context) {
+    return TextButton(
+      onPressed: () => onTestConnectPressed(context),
+      child: const Text("TEST"),
+    );
+  }
+
   List<Widget> _buildSystemDeviceTiles(BuildContext context) {
     return _systemDevices
         .map(
@@ -154,7 +179,7 @@ class _ScanScreenState extends State<ScanScreen> {
             device: d,
             onOpen: () => Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => ActionsScreen(device: d),
+                builder: (context) => ActionsScreen(device: d, username: widget.username, imagePath: widget.imagePath),
                 settings: const RouteSettings(name: '/ActionsScreen'),
               ),
             ),
@@ -186,6 +211,7 @@ class _ScanScreenState extends State<ScanScreen> {
               Text('Buscar dispositivos', style: Theme.of(context).textTheme.bodyMedium),
               SizedBox(width: 10),
               buildScanButton(context),
+              buildTestButton(context),
             ],
           ),
           SizedBox(height: 20),
