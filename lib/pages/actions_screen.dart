@@ -6,6 +6,7 @@ import 'package:casa_inteligente/pages/widgets/nav_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:path/path.dart';
 
 class ActionsScreen extends StatefulWidget {
   final test = false;
@@ -13,8 +14,10 @@ class ActionsScreen extends StatefulWidget {
   final BluetoothDevice device;
   final String username;
   final String imagePath;
+  final String type = 'sala-principal';
 
-  const ActionsScreen({Key? key, required this.device, required this.username, required this.imagePath}) : super(key: key);
+
+  const ActionsScreen({Key? key, required this.device, required this.username, required this.imagePath}) : super(key: key);  
 
   //ActionsScreen({Key? key}) : super(key: key);
 
