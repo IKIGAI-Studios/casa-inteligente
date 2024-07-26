@@ -37,25 +37,25 @@ class ActionsScreenState extends State<ActionsScreen> {
       _isDiscoveringServices = true;
     });
 
-    _connectionStateSubscription = widget.device.connectionState.listen((state) async {
-      _connectionState = state;
-      if (state == BluetoothConnectionState.connected) {
-        try {
-          _services = await widget.device.discoverServices();
-          _characteristic = _services
-              .expand((service) => service.characteristics)
-              .firstWhere((characteristic) => characteristic.uuid.toString() == characteristicUUID);
-        }
-        catch (e) {
-          print("Error discovering services: $e");
-        } 
-        finally {
-          setState(() {
-            _isDiscoveringServices = false;
-          });
-        }
-      }
-    });
+    // _connectionStateSubscription = widget.device.connectionState.listen((state) async {
+    //   _connectionState = state;
+    //   if (state == BluetoothConnectionState.connected) {
+    //     try {
+    //       _services = await widget.device.discoverServices();
+    //       _characteristic = _services
+    //           .expand((service) => service.characteristics)
+    //           .firstWhere((characteristic) => characteristic.uuid.toString() == characteristicUUID);
+    //     }
+    //     catch (e) {
+    //       print("Error discovering services: $e");
+    //     } 
+    //     finally {
+    //       setState(() {
+    //         _isDiscoveringServices = false;
+    //       });
+    //     }
+    //   }
+    // });
   }
 
   void sendLedCommand(BluetoothCharacteristic characteristic, bool turnOn) {

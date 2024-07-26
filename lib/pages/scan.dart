@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:casa_inteligente/pages/actions_screen.dart';
 import 'package:casa_inteligente/pages/widgets/app_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:casa_inteligente/utils/extra.dart';
 
@@ -131,18 +132,6 @@ class _ScanScreenState extends State<ScanScreen> {
   }
 
   Widget buildScanButton(BuildContext context) {
-    // if (FlutterBluePlus.isScanningNow) {
-    //   return FloatingActionButton(
-    //     onPressed: onStopPressed,
-    //     backgroundColor: Colors.red,
-    //     child: const Icon(Icons.stop)
-    //   );
-    // } else {
-    //   return FloatingActionButton(
-    //     onPressed: onScanPressed,
-    //     child: const Text("SCAN") 
-    //   );
-    // }
 
     if (FlutterBluePlus.isScanningNow) {
       return TextButton(
@@ -151,7 +140,6 @@ class _ScanScreenState extends State<ScanScreen> {
         style: Theme.of(context).textButtonTheme.style,
       );
     } else {
-      print('entro');
       return TextButton(
         onPressed: onScanPressed,
         child: const Text("SCAN"),
@@ -201,11 +189,14 @@ class _ScanScreenState extends State<ScanScreen> {
             ],
           ),
           SizedBox(height: 20),
-          ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              ..._buildScanResultTiles(context),
-            ],
+          Expanded(
+            child: ListView(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: false,
+              children: <Widget>[
+                ..._buildScanResultTiles(context),
+              ],
+            ),
           )
         ],
       )
