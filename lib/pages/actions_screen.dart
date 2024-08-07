@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:path/path.dart';
 
 class ActionsScreen extends StatefulWidget {
   final BluetoothDevice device;
@@ -219,7 +218,7 @@ class ActionsScreenState extends State<ActionsScreen> {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Text(
-                  'Otra info',
+                  'Usuario',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],

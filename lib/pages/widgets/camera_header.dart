@@ -17,7 +17,7 @@ class CameraHeader extends StatelessWidget {
             child: Container(
               margin: EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(10),
               ),
               height: 50,

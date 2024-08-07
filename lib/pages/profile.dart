@@ -1,13 +1,7 @@
-import 'dart:async';
 import 'dart:io';
 
-import 'package:casa_inteligente/pages/bluetooth_off.dart';
 import 'package:casa_inteligente/pages/scan.dart';
-import 'package:casa_inteligente/pages/widgets/app_button.dart';
-import 'package:casa_inteligente/pages/widgets/nav_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
-import 'home.dart';
 
 class Profile extends StatelessWidget {
   const Profile(this.username, {Key? key, required this.imagePath}) : super(key: key);
@@ -28,7 +22,7 @@ class Profile extends StatelessWidget {
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               Text(
-                'Otra info',
+                'Usuario',
                 style: Theme.of(context).textTheme.bodySmall,
               ),
             ],

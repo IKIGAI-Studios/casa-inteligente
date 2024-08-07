@@ -20,14 +20,7 @@ class AppButton extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: color,
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.blue.withOpacity(0.1),
-              blurRadius: 1,
-              offset: Offset(0, 2),
-            ),
-          ],
+          color: Theme.of(context).colorScheme.tertiary,
         ),
         alignment: Alignment.center,
         padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
@@ -37,7 +30,7 @@ class AppButton extends StatelessWidget {
           children: [
             Text(
               text ?? '',
-              style: TextStyle(color: Colors.white),
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
             SizedBox(
               width: 10,

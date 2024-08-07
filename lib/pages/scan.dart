@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:casa_inteligente/pages/actions_screen.dart';
 import 'package:casa_inteligente/pages/actions_screen_test.dart';
-import 'package:casa_inteligente/pages/widgets/app_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:casa_inteligente/utils/extra.dart';
 

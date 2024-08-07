@@ -21,13 +21,13 @@ class AppTextField extends StatelessWidget {
     return TextField(
       controller: this.controller,
       autofocus: this.autofocus,
-      cursorColor: Color(0xFF5BC8AA),
+      cursorColor: Color.fromARGB(255, 252, 252, 252),
       decoration: InputDecoration(
         floatingLabelBehavior: FloatingLabelBehavior.never,
         labelText: labelText,
         border: InputBorder.none,
         filled: true,
-        fillColor: Colors.grey[200],
+        fillColor: Theme.of(context).colorScheme.primary,
         enabledBorder: new OutlineInputBorder(
           borderSide: BorderSide.none,
           borderRadius: const BorderRadius.all(

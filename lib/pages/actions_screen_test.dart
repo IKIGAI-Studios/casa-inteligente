@@ -1,10 +1,7 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:casa_inteligente/pages/widgets/nav_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ActionsScreenTest extends StatefulWidget {
@@ -141,7 +138,7 @@ class ActionsScreenTestState extends State<ActionsScreenTest> {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 Text(
-                  'Otra info',
+                  'Usuario',
                   style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
