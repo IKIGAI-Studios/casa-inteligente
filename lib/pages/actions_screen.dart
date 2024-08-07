@@ -8,8 +8,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:path/path.dart';
 
 class ActionsScreen extends StatefulWidget {
-  final test = false;
-
   final BluetoothDevice device;
   final String username;
   final String imagePath;
@@ -56,6 +54,8 @@ class ActionsScreenState extends State<ActionsScreen> {
 
   @override
   void initState() {
+    print(widget.device);
+
     super.initState();
     setState(() {
       _isDiscoveringServices = true;
@@ -124,6 +124,7 @@ class ActionsScreenState extends State<ActionsScreen> {
       String command = turnOn ? "on" : "off";
       List<int> bytes = utf8.encode(command);
       _ledCharacteristic!.write(bytes);
+      print('LED: ' + turnOn.toString());
       setState(() {
         _ledState = turnOn;
       });
@@ -134,7 +135,7 @@ class ActionsScreenState extends State<ActionsScreen> {
     if (_doorCharacteristic != null) {
       String command = action ? "open" : "close";
       List<int> bytes = utf8.encode(command);
-      _ledCharacteristic!.write(bytes);
+      _doorCharacteristic!.write(bytes);
       setState(() {
         _doorState = action;
       });
@@ -309,7 +310,7 @@ class ActionsScreenState extends State<ActionsScreen> {
     setState(() {
       _doorState = value;
 
-      if (_ledCharacteristic != null) {
+      if (_doorCharacteristic != null) {
         sendDoorCommand(value);
       }
     });

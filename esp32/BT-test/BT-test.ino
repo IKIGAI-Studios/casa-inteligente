@@ -17,6 +17,8 @@ bool oldDeviceConnected = false;
 #define DOOR_CHARACTERISTIC_UUID "a1b2c3d4-5678-90ab-cdef-1234567890ab"
 #define TEMPERATURE_CHARACTERISTIC_UUID "abcdef12-3456-7890-abcd-ef1234567890"
 
+BLECharacteristic *temperatureCharacteristic = NULL;
+
 int LED_PIN = 22;
 Servo miServo;
 const int SERVO_PIN = 18;
@@ -137,8 +139,10 @@ void setup()
   doorCharacteristic->setValue("Control Door");
   doorCharacteristic->addDescriptor(new BLE2902());
 
+
+
   // Create a BLE Characteristic for Temperature
-  BLECharacteristic *temperatureCharacteristic = pService->createCharacteristic(
+  temperatureCharacteristic = pService->createCharacteristic(
       TEMPERATURE_CHARACTERISTIC_UUID,
       BLECharacteristic::PROPERTY_READ |
           BLECharacteristic::PROPERTY_NOTIFY);
@@ -173,25 +177,37 @@ void loop()
 
   if (deviceConnected)
   {
-    float temperature = dht11.readTemperature();
-    if (temperature != DHT11::ERROR_CHECKSUM && temperature != DHT11::ERROR_TIMEOUT)
-    {
-      if (isnan(temperature))
-      {
-        Serial.println("Failed to read from DHT sensor!");
-        return;
-      }
-      String tempString = String(temperature);
-      pCharacteristic->setValue(tempString.c_str());
-      pCharacteristic->notify();
-      Serial.print("Temperature: ");
-      Serial.println(tempString);
-    }
-    else
-    {
-      // Print error message based on the error code.
-      Serial.println(DHT11::getErrorString(temperature));
-    }
+    // float temperature = dht11.readTemperature();
+    // if (temperature != DHT11::ERROR_CHECKSUM && temperature != DHT11::ERROR_TIMEOUT)
+    // {
+    //   if (isnan(temperature))
+    //   {
+    //     Serial.println("Failed to read from DHT sensor!");
+    //     return;
+    //   }
+    //   String tempString = String(temperature);
+    //   pCharacteristic->setValue(tempString.c_str());
+    //   pCharacteristic->notify();
+    //   Serial.print("Temperature: ");
+    //   Serial.println(tempString);
+    // }
+    // else
+    // {
+    //   // Print error message based on the error code.
+    //   Serial.println(DHT11::getErrorString(temperature));
+
+      
+    // }
+    // Sends random data
+    Serial.println("Sending mock data...");
+    long randTemp = random(20,24);
+
+    String tempString = String(randTemp);
+    temperatureCharacteristic->setValue(tempString.c_str());
+    temperatureCharacteristic->notify();
+    Serial.print("Temperature: ");
+    Serial.println(tempString);
+
     delay(2000); // Update every 2 seconds
   }
 }
